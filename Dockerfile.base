@@ -1,0 +1,94 @@
+FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Shanghai
+ENV CONDA_DIR=/opt/conda
+ENV PATH=${CONDA_DIR}/bin:${PATH}
+
+# 代理参数，可选
+ARG http_proxy
+ARG https_proxy
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+
+ENV http_proxy=${http_proxy}
+ENV https_proxy=${https_proxy}
+ENV HTTP_PROXY=${HTTP_PROXY}
+ENV HTTPS_PROXY=${HTTPS_PROXY}
+
+# Isaac Sim / Omniverse 常用环境变量
+ENV OMNI_KIT_ALLOW_ROOT=1
+ENV OMNI_KIT_DISABLE_STARTUP=1
+
+# 使用阿里云 Ubuntu 源
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list
+
+# 安装基础依赖
+RUN apt-get update \
+    -o Acquire::Retries=5 \
+    -o Acquire::http::Timeout=120 \
+    -o Acquire::https::Timeout=120 \
+    -o Acquire::ForceIPv4=true && \
+    apt-get install -y --no-install-recommends \
+    bash \
+    ca-certificates \
+    wget \
+    curl \
+    git \
+    git-lfs \
+    unzip \
+    nano \
+    vim \
+    cmake \
+    build-essential \
+    gcc-12 \
+    g++-12 \
+    pkg-config \
+    libssl-dev \
+    libglu1-mesa \
+    libglu1-mesa-dev \
+    libgl1 \
+    libglib2.0-0 \
+    libx11-6 \
+    libxext6 \
+    libxrender1 \
+    libsm6 \
+    libice6 \
+    libvulkan1 \
+    vulkan-tools \
+    zenity \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100 \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装 Miniforge
+RUN wget -O /tmp/miniforge.sh \
+    https://github.com/conda-forge/miniforge/releases/download/24.7.1-2/Miniforge3-24.7.1-2-Linux-x86_64.sh && \
+    bash /tmp/miniforge.sh -b -p ${CONDA_DIR} && \
+    rm /tmp/miniforge.sh && \
+    conda clean -afy
+
+# Conda 基础配置
+RUN conda config --system --set show_channel_urls yes && \
+    conda config --system --set remote_connect_timeout_secs 60 && \
+    conda config --system --set remote_read_timeout_secs 300 && \
+    conda config --system --set remote_max_retries 10 && \
+    conda config --system --set auto_activate_base false
+
+# 创建 Python 3.11 环境
+RUN conda create -n unitree_sim_env python=3.11 -y && \
+    conda clean -afy
+
+# 创建工作目录
+RUN mkdir -p /home/code
+WORKDIR /home/code
+
+# 写入 bashrc，进入容器后自动激活 conda 环境
+RUN echo 'source /opt/conda/etc/profile.d/conda.sh' >> /root/.bashrc && \
+    echo 'conda activate unitree_sim_env' >> /root/.bashrc && \
+    echo 'export OMNI_KIT_ALLOW_ROOT=1' >> /root/.bashrc && \
+    echo 'export OMNI_KIT_DISABLE_STARTUP=1' >> /root/.bashrc && \
+    echo 'export CYCLONEDDS_HOME=/cyclonedds/install' >> /root/.bashrc
+
+CMD ["/bin/bash"]
