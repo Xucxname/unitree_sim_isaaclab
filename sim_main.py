@@ -178,6 +178,18 @@ def main():
         print(f"Failed to parse environment configuration: {e}")
         return
     
+    if args_cli.task in {"test", "Isaac-PickPlace-Popcorn-G129-Dex1-Joint"}:
+        try:
+            if args_cli.task == "test":
+                from tasks.g1_tasks.test.mdp.scene_events import load_genie_popcorn_assets
+            else:
+                from tasks.g1_tasks.pick_place_popcorn_g1_29dof_dex1.mdp.scene_events import load_genie_popcorn_assets
+
+            load_genie_popcorn_assets(hide_visual_background=True)
+        except Exception as e:
+            print(f"Failed to preload {args_cli.task} task assets: {e}")
+            return
+
     # create environment
     print("\ncreate environment...")
     try:
