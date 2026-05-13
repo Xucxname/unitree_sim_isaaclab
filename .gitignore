@@ -122,6 +122,7 @@ data/
 assets/
 assets.*
 assets
+/genie/
 
 ${data}
 *.etli
