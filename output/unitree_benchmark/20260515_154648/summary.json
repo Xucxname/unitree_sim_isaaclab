@@ -1,0 +1,14 @@
+{
+  "run_dir": "/home/user/unitree_sim_isaaclab/output/unitree_benchmark/20260515_154648",
+  "num_episodes": 1,
+  "completed": 0,
+  "failed": 1,
+  "average_total_reward": 0.0,
+  "average_steps": 0.0,
+  "episodes_path": "/home/user/unitree_sim_isaaclab/output/unitree_benchmark/20260515_154648/episodes.jsonl",
+  "tasks": [
+    "Isaac-Dump-Trash-Kitchen-G129-Dex1-Joint"
+  ],
+  "policy": "zero",
+  "episodes_per_instruction": 1
+}

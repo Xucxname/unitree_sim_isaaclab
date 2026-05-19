@@ -189,6 +189,15 @@ def main():
         except Exception as e:
             print(f"Failed to preload {args_cli.task} task assets: {e}")
             return
+    else:
+        try:
+            from tasks.g1_tasks.genie_selected_tasks_g1_29dof_dex1 import load_genie_selected_task_assets
+
+            if not load_genie_selected_task_assets(args_cli.task):
+                pass
+        except Exception as e:
+            print(f"Failed to preload {args_cli.task} task assets: {e}")
+            return
 
     # create environment
     print("\ncreate environment...")

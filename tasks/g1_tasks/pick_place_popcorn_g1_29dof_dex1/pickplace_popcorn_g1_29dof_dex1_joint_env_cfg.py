@@ -21,7 +21,7 @@ class ObjectTableSceneCfg(TestAssetTableCylinderSceneCfg):
     """G1 Dex1 fixed-base scene aligned to the GenieSim popcorn pose."""
 
     robot: ArticulationCfg = G1RobotPresets.g1_29dof_dex1_base_fix(
-        init_pos=(0.05481, -0.06354, 0.85),
+        init_pos=(0.05481, -0.06354, 0.55),
         init_rot=(1.0, 0.0, 0.0, 0.0),
     )
 

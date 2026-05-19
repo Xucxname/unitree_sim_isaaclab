@@ -313,11 +313,11 @@ G129_CFG_WITH_DEX1_BASE_FIX = ArticulationCfg(
                 "right_hand_Joint1_1",
                 "right_hand_Joint2_1",
             ],
-            effort_limit=None,  # increase the torque limit
-            velocity_limit=None,  # set the velocity limit to 0
-            stiffness=800.0,    # increase the stiffness (kp)
-            damping=3.0,        # increase the damping (kd)
-            friction=200.0,
+            effort_limit_sim=300.0,
+            velocity_limit_sim=200.0,
+            stiffness=1600.0,
+            damping=6.0,
+            friction=50.0,
             armature=None,
         ),
 
@@ -687,11 +687,11 @@ G129_CFG_WITH_DEX1_WHOLEBODY = ArticulationCfg(
                 "right_hand_Joint1_1",
                 "right_hand_Joint2_1",
             ],
-            effort_limit=None,  # increase the torque limit
-            velocity_limit=None,  # set the velocity limit to 0
-            stiffness=800.0,    # increase the stiffness (kp)
-            damping=3.0,        # increase the damping (kd)
-            friction=200.0,
+            effort_limit_sim=300.0,
+            velocity_limit_sim=200.0,
+            stiffness=1600.0,
+            damping=6.0,
+            friction=50.0,
             armature=None,
         ),
     },
